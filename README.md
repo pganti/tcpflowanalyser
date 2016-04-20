@@ -88,7 +88,7 @@ Example:
 
 The program then performs some statistics on the groups and prints them with the following format:
 
-Gi-     ST:TSi1    ET:TSi2   El:n1     GP:n2   P:n3    NP:n4    NRC:n5       NDB:n6       MDB:n7          F (fi)      D (di)   M ( optional ) 
+	Gi-     ST:TSi1    ET:TSi2   El:n1     GP:n2   P:n3    NP:n4    NRC:n5       NDB:n6       MDB:n7          F (fi)      D (di)   M ( optional ) 
 
 * Gi is the group number
 * ST is the start time of the group, that is the timestamp of the first packet of this group
@@ -109,26 +109,25 @@ Gi-     ST:TSi1    ET:TSi2   El:n1     GP:n2   P:n3    NP:n4    NRC:n5       NDB
 
 Example: the statistics for group i would be:
 
-Gi-   ST:TSi1   ET:TSi2     El:TSi2-TSi1     GP:TSi1-TSi-11  P:4  NP:4  NRC:5000  NDB:4000  MDB:1000  F   D   M
+	Gi-   ST:TSi1   ET:TSi2     El:TSi2-TSi1     GP:TSi1-TSi-11  P:4  NP:4  NRC:5000  NDB:4000  MDB:1000  F   D   M
 
 and for group i+1:
 
-Gi+1- ST:TSi+1  ET:TSi+12   EL:TSi+12-TSi+1  GP:TSi+1-TSi1   P:2  NP:0  NRC:0     NDB:0     MDB:0     F i D i 
+	Gi+1- ST:TSi+1  ET:TSi+12   EL:TSi+12-TSi+1  GP:TSi+1-TSi1   P:2  NP:0  NRC:0     NDB:0     MDB:0     F i D i 
 
 If the user has chosen details = 1 then the program also prints the packet details, that is for each group it prints the new packets as they
 were observed in the dump file ( that is with the same format ) and then the duplicate or fillers. 
 
 Example:
 
-group 0: 0 11:43:47.743470 1714077297:1714077357 |                     one new data packet for group 0
-group 0:                                                               no dups of fillers for group 0 
-group 1:                                                               no new data packets for group 1
-group 1: 1 11:43:47.773242 0:60 PUREFILLERof0,|                        one filler of group 0 for group 1
+		group 0: 0 11:43:47.743470 1714077297:1714077357 |                     one new data packet for group 0
+		group 0:                                                               no dups of fillers for group 0 
+		group 1:                                                               no new data packets for group 1
+		group 1: 1 11:43:47.773242 0:60 PUREFILLERof0,|                        one filler of group 0 for group 1
 
-remarks:
---------
+#Remarks
 
-* sometimes tcpdump does not translate the sequence number ( absolute ) of the first packet to a relative sequence number.
+* Sometimes tcpdump does not translate the sequence number ( absolute ) of the first packet to a relative sequence number.
   Thus we sometimes have:
         packet1 176571321231:176571321232 
         packet2 0:1460
@@ -150,22 +149,21 @@ remarks:
      packeti  :  1000 - 2000
      packeti+1:  1500 - 1800         the progam will detect that packeti+1 is a duplicate of packeti
 
-but fillers have to fit exactly the gap, or be smaller. Moreover a filler will remain a filler, that is even if the gap has been filled, 
-another copy will be detected as a filler, not as a duplicate.
+but fillers have to fit exactly the gap, or be smaller. Moreover a filler will remain a filler, that is even if the gap has been filled,  another copy will be detected as a filler, not as a duplicate.
  Example:
+		
+		          {  packet i1: 0    - 1000
+		GROUP i   {  packet i2: 1000 - 2000
+		          {  packet i3: 4000 - 5000
+		          {  packet i4: 3000 - 4000 
 
-          {  packet i1: 0    - 1000
-GROUP i   {  packet i2: 1000 - 2000
-          {  packet i3: 4000 - 5000
-          {  packet i4: 3000 - 4000 
-
-          {  packeti+11: 1000 - 2000    => is a duplicate of packet i2, for group i
-GROUP i+1 {  packeti+12: 2000 - 3000    => is a filler of groupi
+		          {  packeti+11: 1000 - 2000    => is a duplicate of packet i2, for group i
+		GROUP i+1 {  packeti+12: 2000 - 3000    => is a filler of groupi
 
 
-GROUP i+2 {  packeti+21: 1000 - 2000    => is a filler of groupi, not a duplicate of packeti+11 groupi+1. ( it is but the program does not 
-                                                                                                                know
-* if a group contains no new data bytes, then it contains no missing data bytes.
+		GROUP i+2 {  packeti+21: 1000 - 2000    => is a filler of groupi, not a duplicate of packeti+11 groupi+1. ( it is but the program does not 
+		                                                                                                                know
+* If a group contains no new data bytes, then it contains no missing data bytes.
 
 * How to choose the interval: 
   for version=ad:       the interval should be the transmission time Tx. Indeed, if the packet belongs to the same cwnd then the time between
