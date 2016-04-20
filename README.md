@@ -52,38 +52,39 @@ For each flow that you specified, the program does the following:
 Example:
 
          {  packet i1 , TSi1
-         {  packet i2 , TSi2
-GROUP i  {         .
-         {         .
-         {  packet ip , TSip
+			         {  packet i2 , TSi2
+			GROUP i  {         .
+			         {         .
+			         {  packet ip , TSip
 
-            packet k , TSk   => packet being read:  if TSk - TSip <= interval then put packet k in group i, otherwise packet k is the first
-                                packet of group i+1 
+			            packet k , TSk   => packet being read:  if TSk - TSip <= interval then put packet k in group i, otherwise packet k is the first
+			                                packet of group i+1 
 
 
   if version = "al" :   if the difference between this time and the timestamp of the first packet of the current group is smaller than "interval", then the packet belongs to the current group, otherwise it starts a new group. 
 
 Example:
+			
+		         {  packet i1 , TSi1
+		         {  packet i2 , TSi2
+		GROUP i  {         .
+		         {         .
+		         {  packet ip , TSip
 
-         {  packet i1 , TSi1
-         {  packet i2 , TSi2
-GROUP i  {         .
-         {         .
-         {  packet ip , TSip
-
-            packet k , TSk   => packet being read:  if TSk - TSi1 <= interval then put packet k in group i, otherwise packet k is the first 
-                                packet of group i+1
+		            packet k , TSk   => packet being read:  if TSk - TSi1 <= interval then put packet k in group i, otherwise packet k is the first 
+		                                packet of group i+1
 
   once a packet has been placed in a group, the program verifies if the packet is new or is a duplicate of a previous packet ( of a previous group or the same group) or a filler of a previous group. 
 
+		
+		          {  packet i1: 0    - 1000
+		GROUP i   {  packet i2: 1000 - 2000
+		          {  packet i3: 4000 - 5000
+		          {  packet i4: 3000 - 4000
 
-          {  packet i1: 0    - 1000
-GROUP i   {  packet i2: 1000 - 2000
-          {  packet i3: 4000 - 5000
-          {  packet i4: 3000 - 4000
+		          {  packeti+11: 1000 - 2000    => is a duplicate of packet i2, fo group i 
+		GROUP i+1 {  packeti+12: 2000 - 3000    => is a filler of group i
 
-          {  packeti+11: 1000 - 2000    => is a duplicate of packet i2, fo group i 
-GROUP i+1 {  packeti+12: 2000 - 3000    => is a filler of group i
 
 The program then performs some statistics on the groups and prints them with the following format:
 
